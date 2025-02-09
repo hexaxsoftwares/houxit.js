@@ -1,0 +1,12 @@
+{
+  "name": "houxer",
+  "version": "0.1.3",
+  "description": "The transparent web framework for perfectionists",
+  "main": "src/houxer.module.js",
+  "scripts": {
+    "test": "houxertest"
+  },
+  "author": "Chukwuemeka Ezeta",
+  "license": "MIT",
+  "type": "module"
+}
