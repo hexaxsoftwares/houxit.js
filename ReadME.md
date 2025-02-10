@@ -6,25 +6,25 @@ Welcome to Houxer, the modern sleek and robust web framework that empowers creat
 
 
 ### Overview
-**Houxer** (pronounced as `horse : hâïrš`), derived from the French word for `holly`, which symbolizes an evergreen tree and progressive commitment to innovation. Houxer is a next-generation JavaScript framework, partly inspired by the elegance and success of Vue.js, designed to streamline the creation of dynamic, reactive, and component-based web applications with unparalleled ease.
+**Houxer** (pronounced as `haùzer`) is a next-generation JavaScript framework, partly inspired by the elegance and success of Vue.js, with the design to streamline the creation of dynamic, reactive, and component-based web applications with unparalleled ease.
 
-With its intuitive API and clean architecture, Houxer empowers developers to craft interactive and complex UIs with simplicity, making it the framework of choice for modern web development.
+Through its intuitive API and clean architecture, Houxer empowers developers to craft interactive and complex UIs with simplicity, making it the framework of choice for modern web development.
 
 ### **Why Houxer?**
 
-**Houxer** isn’t just another framework—it's a revolution. Combining the best practices of modern web development with innovative features, Houxer redefines how we build web applications, delivering high performance, modularity, and an unmatched developer experience.
+**Houxer** isn’t just another framework—it's a revolution. Combining the best practices of modern web development with innovative features. Houxer redefines how we build web applications, delivering high performance, modularity, and an unmatched developer experience.
 
 **Some Key Features and Capabilities at a glance:**
 
 - 🧊 **Component-driven architecture**: Craft reusable, modular components with ease through **Houxer Widgets**.
 - 🕋 **Declarative templating**: Write clean and concise templates with Houxer intuitive templating syntax.
 - 🛣️ **Two-way data binding**: Keep your data in sync with automatic updates.
-- 📶 **Powerful state management system**: Manage your application's state with ease with a lightweight built-in statefull API.
+- 📶 **Powerful state management system**: Manage your application's state with ease with a lightweight built-in statefull API or an external fully featured houx powered state management framework.
 - 🌐 **Extensive ecosystem**: Leverage a growing community of developers and a wealth of plugins and tools.
 - 📝 **Gentle learning curve**: Easy to learn, making it perfect for developers of all skill levels, from novices to experts.
 - ⚡ **Optimized-performance**: Houxer is optimized for speed and efficiency, ensuring fast and seamless user experiences.
 - 🚀 **Flexible and adaptable**: Designed to fit your needs. You can Seamlessly integrate with other libraries , frameworks and existing projects, or use it standalone for new projects..
-- 📲 **Virtual DOM**: Optimize performance with a virtual DOM that minimizes DOM mutations and ensures accuracy during DOM reconciliation transform.
+- 📲 **Virtual DOM**: Optimized performance with a virtual DOM that minimizes DOM mutations and ensures accuracy during DOM reconciliation transform.
 - 🎯 **Smart Updates**: Update components only when necessary, reducing unnecessary re-renders.
 - 🤽 **Context API**: Share data and functionality between widgets with a simple and efficient API.
 - 🧩 **Community-driven**: Join a growing community of developers and contributors.
@@ -72,13 +72,29 @@ Whether you're starting fresh or integrating into an existing project, Houxer ma
 Install HouxerKit via npm:
 
 ```bash
-npm install init:houxer
+npm install init:houxerkit
+```
+Houxer Installation via npm
+
+```bash
+npm install houxer
 ```
 
-For simpler integration, Houxer can be added directly to your project with:
+For simpler integration, Houxer can be added directly to your project via jsdelivr:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/hexaxsoftwares/houxer.js@main/houxer.global.dev.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/hexaxsoftwares/houxer.js@main/src/global/houxer.global.dev.js"></script>
+```
+
+If you prefer an esm-modules exported components
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/hexaxsoftwares/houxer.js@main/src/houxer.module.js"></script>
+```
+
+via unpkg
+```html
+<script src="https://unpkg.com/houxer@0.1.3/src/houxer.module.js"></script>
 ```
 Check the Installation guide for detailed Installation information.
 
@@ -218,7 +234,7 @@ Houxer.initBuild({
   }
 });
 ```
-This merely scratches the surface, contact the lifecycle hooks API fore more hooks.
+This merely scratches the surface, contact the lifecycle hooks API for more hooks.
 
 #### Advanced Topics
 
