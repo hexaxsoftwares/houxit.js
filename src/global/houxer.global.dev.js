@@ -34,7 +34,7 @@ const Houxit=(function(global){
   const define=Object.defineProperty;
   const isS=Object.is;
   const hasProp=(obj, prop)=> prop in obj;
-  function _mapValue(obj, arg){
+  function _makeMap_(obj, arg){
     return isString(obj) ? new Set(obj.split(',')).has(arg) : validateType(arg, [Set, Tuple, Map ]) ? obj.has(arg) : isPObject(obj) ? hasProp(obj, arg) : isArray(obj) ? obj.includes(arg) :  false;
   }
   const E_Obj=Object.freeze({});
@@ -46,7 +46,7 @@ const Houxit=(function(global){
   const isValidAccessor=variable => isString(variable) && /[\w$]/.test(variable.at(0)) && !invalidAccessorCharRegex.test(variable);
   const isValidIdentifier=variable => isString(variable) && /[\w$]/.test(variable.at(0)) && !invalidIdentifierCharRegex.test(variable);
   const constBlockContext="if_Block,for_Block,slots_Block,children_Block";
-  const isValidCtxType=type=>_mapValue(constBlockContext, type);
+  const isValidCtxType=type=>_makeMap_(constBlockContext, type);
   const isFunction=func=>getType(func) === 'function';
   const isPFunction=func=>isFunction(func) && !isClass(func);
   const isNumber=num=>getType(num) === 'number';
@@ -147,52 +147,53 @@ const Houxit=(function(global){
     dev_loggers:[]
   }
   const plainFunctionOptions="model,preBuild,postBuild,preMount,postMount,preUpdate,postUpdate,postDestroy,preDestroy,transmit,context,onEffect,onTracked,onCatch,build,onSlotEffect,onSlotRender,tokenRefs";
-  const nonAFuncMethod=fnName=> _mapValue(plainFunctionOptions, fnName);
+  const nonAFuncMethod=fnName=> _makeMap_(plainFunctionOptions, fnName);
   const calledOnceFNOptions="model,preBuild,postBuild,preMount,postMount,onTracked,build,onSlotRender"
-  const isCalledOnceOpt=opt=>_mapValue(calledOnceFNOptions, opt)
+  const isCalledOnceOpt=opt=>_makeMap_(calledOnceFNOptions, opt)
   const nodeJSOnlyOption="markdownSrc,styleSheetSrc,templateSrc";
-  const isNodeJSOnlyOption=opt=>_mapValue(nodeJSOnlyOption, opt);
+  const isNodeJSOnlyOption=opt=>_makeMap_(nodeJSOnlyOption, opt);
   const primaryKeyOptions="build,styleSheetSrc,styleSheet,templateSrc,template,name,markdownSrc,markdown,context";
-  const isPrimaryKeyOption=opt=>_mapValue(opt, primaryKeyOptions);
+  const isPrimaryKeyOption=opt=>_makeMap_(opt, primaryKeyOptions);
   const isArgument=arg=>_toStringCall(arg) === "[object Arguments]";
   function len(obj){
     if(!obj) return -1;
     obj=unwrap(obj);
     return validateType(obj, [ String , Array, Arguments ] ) ? obj.length : validateType(obj, [ Set, Map, Tuple ]) ? obj.size : isObject(obj) ? keys(obj).length : isNumber(obj) ? obj : -1 ;
   }
-  const isValidWidgetOption=opts=>_mapValue(validWidgetOptions, opts);//checks if an option is a vslid Houxit widget option
+  const isValidWidgetOption=opts=>_makeMap_(validWidgetOptions, opts);//checks if an option is a vslid Houxit widget option
   const HTML_TAGS="html,head,style,title,body,address,article,aside,footer,header,h1,h2,h3,h4,h5,h6,main,nav,section,blockquote,dd,div,dl,dt,figcaption,figure,li,menu,ol,p,pre,ul,a,abbr,b,bdi,bdo,cite,code,data,dfn,em,i,kbd,mark,q,rp,rt,ruby,s,samp,small,span,strong,sub,sup,time,u,var,audio,map,video,iframe,object,picture,portal,svg,math,canvas,noscript,script,del,ins,caption,col,colgroup,table,tbody,td,tfoot,th,thead,tr,datalist,fieldset,form,label,legend,meter,optgroup,option,output,progress,select,textarea,details,dialog,summary,button,base,link,meta,hr,br,wbr,area,img,track,embed,source,input,template,slot" ;//All html valid tags supported by the Houxit framework
-  const IS_HTML_TAG=txt=>_mapValue(HTML_TAGS, txt);
+  const IS_HTML_TAG=txt=>_makeMap_(HTML_TAGS, txt);
   const WEB_COMPONENTS="template,slot";//Web components tags , also supported by the Houxit framework
   const HTML_FORM_ELEMENTS="select,textarea,input,form,progress,meter,option";
-  const Is_Form_Element=element=>IS_ELEMENT_NODE(element) && _mapValue(HTML_FORM_ELEMENTS, element.localName);
-  const IS_WEB_COMPONENT=txt=>_mapValue(WEB_COMPONENTS, txt);
+  const Is_Form_Element=element=>IS_ELEMENT_NODE(element) && _makeMap_(HTML_FORM_ELEMENTS, element.localName);
+  const IS_WEB_COMPONENT=txt=>_makeMap_(WEB_COMPONENTS, txt);
   const HTML_VOID_TAGS="base,link,meta,hr,br,wbr,area,img,track,embed,source,input";//HTML void tags, also supported by the Houxit framework
-  const IS_HTML_VOID_TAG=txt=>_mapValue(HTML_VOID_TAGS, txt);
+  const IS_HTML_VOID_TAG=txt=>_makeMap_(HTML_VOID_TAGS, txt);
   const HTML_DEPRECATED_TAGS="acronym,noembed,applet,noframes,bgsound,param,big,blink,plaintext,center,rb,content,rtc,dir,shadow,font,spacer,frame,strike,frameset,image,tt,keygen,xmp,marquee,nobr,menuitem";//HTML obselete and deprecated element. 
   //The above tags are no more been supported by the houxit framework
-  const IS_HTML_DEPRECATED_TAG= txt => _mapValue(HTML_DEPRECATED_TAGS, txt);
+  const IS_HTML_DEPRECATED_TAG= txt => _makeMap_(HTML_DEPRECATED_TAGS, txt);
   const HTMLIDLAttributes="accesskey,contenteditable,dir,draggable,enterkeyhint,hidden,inert,innerText,inputmode,popover,lang,noModule,nonce,outerText,spellcheck,style,tabindex,title,translate,className,value,innerHTML,outerHTML";
-  const isHTMLIDLAttributes=txt=>_mapValue(HTMLIDLAttributes, txt)
+  const isHTMLIDLAttributes=txt=>_makeMap_(HTMLIDLAttributes, txt)
   const HTMLBooleanAttributes="disabled,hidden,draggable,checked,selected,defer,ismap,reversed,readonly,autoplay,disableremoteplayback,muted,loop";
-  const isHTMLBooleanAttributes=txt=>_mapValue(HTMLBooleanAttributes, txt);
+  const isHTMLBooleanAttributes=txt=>_makeMap_(HTMLBooleanAttributes, txt);
   const DomParserTags="html,head,link,meta,body,style,script,noscript,template";
-  const isINDOMElements=tag=>_mapValue(DomParserTags, tag);
+  const isINDOMElements=tag=>_makeMap_(DomParserTags, tag);
   const SVG_TAGS="animate,animateMotion,animateTransform,circle,clipPath,defs,desc,discard,ellipse,feBlend,feColorMatrix,feComponentTransfer,feComposite,feConvolveMatrix,feDiffuseLighting,feDisplacementMap,feDistantLight,feDropShadow,feFlood,feFuncA,feFuncB,feFuncG,feFuncR,feGaussianBlur,feImage,feMerge,feMergeNode,feMorphology,feOffset,fePointLight,feSpecularLighting,feSpotLight,feTile,feTurbulence,filter,foreignObject,g,hatch,hatchpath,image,line,linearGradient,marker,mask,metadata,mpath,path,pattern,polygon,polyline,radialGradient,rect,set,stopsvg,switch,symbol,text,textPath,tspan,use,view";
   const SVG_DEPRECATED_TAGS="altGlyph,altGlyphDef,altGlyphItem,cursor,font,font-face,font-face-format,font-face-name,font-face-src,font-face-uri,glyph,glyphToken,hkern,missing-glyph,tref,vkern";
-  const IS_SVG_TAG=tag=>_mapValue(SVG_TAGS, tag);
-  const IS_SVG_DEPRRCATED_TAG=tag=>_mapValue(SVG_DEPRECATED_TAGS, tag);
+  const IS_SVG_TAG=tag=>_makeMap_(SVG_TAGS, tag);
+  const IS_SVG_DEPRRCATED_TAG=tag=>_makeMap_(SVG_DEPRECATED_TAGS, tag);
   const MATHML_TAGS = "malignmark,menclose,annotation,annotation-xml,maction,merror,maligngroup,mfenced,mn,mo,mmultiscripts,mfrac,semantics,none,mlongdiv,mlabeledtr,mfraction,mtr,mglyph,mi,mover,munder,munderover,mpadded,mphantom,mspace,mroot,mprescripts,msline,mrow,ms,mscarries,mscarry,msgroup,msqrt,mstack,mtd,mtext,mtable,mstyle,msub,msubsup,msrow,msup";
-  const IS_MATHML_TAG=tag=>_mapValue(MATHML_TAGS, tag);
+  const IS_MATHML_TAG=tag=>_makeMap_(MATHML_TAGS, tag);
   const IS_VALID_TAGNAME=(txt)=>{
     if(IS_HTML_TAG(txt)||IS_WEB_COMPONENT(txt)||IS_HTML_VOID_TAG(txt) || IS_SVG_TAG(txt) || IS_MATHML_TAG(txt)) return true;
     if(IS_HTML_DEPRECATED_TAG(txt) || IS_SVG_DEPRRCATED_TAG(txt)){
-      $debug_log(`"${txt}" is an html/svg deprecated tag, and should not be used in new projects\n\nhouxit    does not offer the compilation of obselete elements`);
+      $debug_log(`"${txt}" is an html/svg deprecated tag, and should not be used in new projects\n\nhouxit does not allow the compilation of obselete
+      elements`);
     }
     return false;
   }
   const dataStringTypes="string,function,object,array,boolean,number,symbol,set,map,bigint,set,map,weakmap,weakset,date,weakref,promise,proxy,tuple";//Valid javascript datatypes
-  const isValidDataStringType=obj=>_mapValue(dataTypes, obj);//checks if a string value is a dataTypes return text
+  const isValidDataStringType=obj=>_makeMap_(dataTypes, obj);//checks if a string value is a dataTypes return text
   class Tuple extends BaseTuple{
     constructor(){
       super(...arguments);
@@ -211,14 +212,14 @@ const Houxit=(function(global){
   const isTemplateClass=klass=> klass instanceof BaseTemplateClass;
   const DataFunctionMap=[String, Function, Object, Array, Symbol, Number, Boolean];
   const XtructDataCallableTypes=[Set,Map,WeakMap,WeakSet, Date,WeakRef,Promise,RegExp,Proxy,BigInt,ArrayBuffer,Tuple];
-  const isGlobalBuiltinType=type=>_mapValue(DataFunctionMap, type) || _mapValue(XtructDataCallableTypes, type);
+  const isGlobalBuiltinType=type=>_makeMap_(DataFunctionMap, type) || _makeMap_(XtructDataCallableTypes, type);
   function isDomSpecialConstructor(value){
     if(!inBrowserCompiler) return false;
     const domSpecialConstructors=[ Element];
-    if(new Set(domSpecialConstructors).has(value)) return true
+    if(new Set(domSpecialConstructors).has(value)) return true;
     return isNativeElement(value) || value instanceof Element;
   }
-  const Data_Flags="NodeList,PATCH_FLAGS,PATCH-TYPE-TUPLE"
+  const Data_Flags="NodeList,PATCH_FLAGS,PATCH-TYPE-TUPLE";
   const hasUpperCase=str=>str.match(/[A-Z]/);
   const hasLowerCase=str=>str.match(/[a-z]/);
   const hasDigit=dig=>dig.match(/[0-9]/);
@@ -253,6 +254,10 @@ const Houxit=(function(global){
   const IS_ENTITY_REFERENCE_NODE=node=>node && node.nodeType === NodeTypeMap.ENTITY_REFERENCE_NODE;
   const IS_COMMENT_NODE=node=>node && node.nodeType === NodeTypeMap.COMMENT_NODE;
   // const TypeMethods={isString, isFunction, isObject, isArray, isBoolean, isNumber, isDate, isSymbol, isSet, isMap, isTuple }
+  function isHouxitRenderNode(node){
+    return isPrimitive(node) || isArray(node) || isSlotInstance(node) ||
+    isVNodeClass(node) || isTemplateClass(node);
+  }
   function isChildrenNode(val){
     return isPrimitive(val) || isArray(val) || isHouxitElement(val) || isNativeElement(val)  || isSlotInstance(val) || isVNodeClass(val) || isTemplateClass(val);
   }
@@ -283,19 +288,19 @@ const Houxit=(function(global){
       return false
     }
   }
-  const isInDomNode=element=> element instanceof Node && element.getRootNode() === document;
+  const isInDomNode=element=> inBrowserCompiler && element instanceof Node && element.getRootNode() === document;
   const GLOBAL_EVENTS="abort,animationcancel,animationend,animationiteration,animationstart,auxclick,blur,error,focus,canplay,canplaythrough,cancel,change,click,close,contextmenu,dblclick,drag,dragend,dragenter,dragleave,dragover,dragstart,drop,durationchange,emptied,ended,formdata,gotpointercapture,input,invalid,keydown,keypress,load,keyup,loadeddata,loadedmetadata,loadend,loadstart,lostpointercapture,mousedown,mouseenter,mouseleave,mousemove,mouseout,mouseover,mouseup,mousewheel,wheel,pause,play,playing,pointerdown,pointermove,pointerup,pointercancel,pointerover,pointerout,pointerleave,pointerenter,pointerlockchange,pointerlockerror,progress,ratechange,reset,resize,scroll,securitypolicyviolation,seeked,seeking,select,selectstart,selectionchange,slotchange,stalled,submit,suspend,timeupdate,touchcancel,touchend,touchstart,touchmove,transitioncancel,transitionrun,transitioned,transitionstart,waiting,volumechange,autocompleteerror,autocomplete,hover";//Html event names managed by houxit on elements
-  const IS_VALID_EVENT_HANDLER=eventName=>_mapValue(GLOBAL_EVENTS, eventName);
+  const IS_VALID_EVENT_HANDLER=eventName=>_makeMap_(GLOBAL_EVENTS, eventName);
   const isClass = val=> isFunction(val) && val.toString().startsWith('class');
   const directivesHooksMap="created,mounted,updated,init,destroyed";
   function instance_Has_Widget(self, name ){
-    return _mapValue(BUILT_IN_WIDGETS, name) || _mapValue(self[$$$register]?.widgets || {}, name ) ;
+    return _makeMap_(BUILT_IN_WIDGETS, name) || _makeMap_(self[$$$register]?.widgets || {}, name ) ;
   }
-  const normalize_Widget=(self, name)=>_mapValue(BUILT_IN_WIDGETS, name) ? BUILT_IN_WIDGETS[name] : _mapValue(self[$$$register].widgets, name) ? self[$$$register].widgets[name]: null;
+  const normalize_Widget=(self, name)=>_makeMap_(BUILT_IN_WIDGETS, name) ? BUILT_IN_WIDGETS[name] : _makeMap_(self[$$$register].widgets, name) ? self[$$$register].widgets[name]: null;
   function instance_Has_Directive(self, name ){
-    return !isHouxitDirective(name) && _mapValue(self[$$$register]?.directives || {}, name ) ;
+    return !isHouxitDirective(name) && _makeMap_(self[$$$register]?.directives || {}, name ) ;
   }
-  const normalize_Directives=(self, name)=> _mapValue(self[$$$register].directives, name) ? self[$$$register].directives[name]: null;
+  const normalize_Directives=(self, name)=> _makeMap_(self[$$$register].directives, name) ? self[$$$register].directives[name]: null;
   class slotInstanceMap{
     slots=new Object();
     constructor(opts){
@@ -304,7 +309,7 @@ const Houxit=(function(global){
   }
   const isSlotInstance=val=> val instanceof slotInstanceMap;
   const requestMethods="POST,GET,PATCH,HEAD,DELETE,PUT,CONNECT,OPTIONS,TRACE";
-  const isRequestMethod=method=>_mapValue(requestMethods, method);
+  const isRequestMethod=method=>_makeMap_(requestMethods, method);
   const isHouxitElement=vnode=>vnode instanceof HouxitElement;
   const isHouxitBuild=widget=>widget instanceof HouxitBuild;
   const isHouxitTextElement=vnode=>vnode instanceof HouxitTextElement;
@@ -312,9 +317,9 @@ const Houxit=(function(global){
   const isHouxitCustomNativeElement=vnode=> vnode instanceof HouxitCustomNativeElement;
   const isHouxitFragmentElement=vnode => vnode instanceof HouxitFragmentElement;
   const readonlyModelProps="$element,$params,$attrs,$signals,$slots,$parent,$root";
-  const proxySkipped="$element,$signals,$parent,$root,_observe,_useAgent,_deferTick,_write,_effectHook,[[[Reactive__Token_]]]";
+  const proxySkipped="$element,$signals,$parent,$root,_observe,_useAgent,_deferTick,_write,_effectHook,[[[reactive__Token]]]";
   const validTokenConfigOptions="onTrack,onEffect,isComputed,isReadonly"
-  const isProxySkipped=prop=>_mapValue(proxySkipped, prop);
+  const isProxySkipped=prop=>_makeMap_(proxySkipped, prop);
   function createObj(name, props){
     if(len(arguments) === 1 && isPObject(name)) props=name;
     if(props && !isPObject(props)) props=null;
@@ -384,6 +389,7 @@ const Houxit=(function(global){
   const $buildWidgetNormalizerKey=Symbol();
   const factoryHXSelfInstance=Symbol();
   const $factoryTokenKey=Symbol();
+  const $StarterKitKey=Symbol();
   const isFRKey=(key)=> $factoryTokenKey === key && isS($factoryTokenKey, key);
   const Fragment=Symbol('hx:fragment');
   const Portal=Symbol('hx:portal');
@@ -420,8 +426,8 @@ const Houxit=(function(global){
   const widgetSpecialAttrProps = new Set([ $$$$dir__ref$$$$ , dir$$__render, $$$context , $$slotName, $$$Events, $$$ModelUpdateKey ]);
   const isSelfRecursiveWidget=build=> isHouxitBuild(build) && build[$$$ownProperties].isSelfRecursive === (true);
   const isSpecProp = prop => widgetSpecialAttrProps.has(prop);
-  const isBuiltinBlocks=block=>_mapValue("if,else,else:if,for,const,class,new,debugger,html", block);
-  const isBuiltinVoidBlocks=block=>_mapValue("else,else:if,const,new,debugger,html", block);
+  const isBuiltinBlocks=block=>_makeMap_("if,else,else:if,for,const,class,new,debugger,html", block);
+  const isBuiltinVoidBlocks=block=>_makeMap_("else,else:if,const,new,debugger,html", block);
   function createRenderFN(self, fn){
     if(!isPFunction(fn)){
       $debug_log(`parameter 2 of "createRenderFN" macro expects a plain Function`);
@@ -489,8 +495,8 @@ const Houxit=(function(global){
     return _makeCloneVersion(...arguments);
   }
   const isCollection=item=>validateType(item, [Array, Set, Tuple, Arguments ]);
-  const isInvalidInjectorOpt=opt=>_mapValue("build,preBuild", opt);
-  const isAllowedComposersOpt=opt=>_mapValue("postBuild,preMount,postMount,preUpdate,postUpdate,preDestroy,postDestroy,defineConfig,useSignals,useSlots,useTransmit,useReceiver,useContext,useParams,onEffect,onTracked,onCatch,onSlotRender,onSlotEffect", opt);
+  const isInvalidInjectorOpt=opt=>_makeMap_("build,preBuild", opt);
+  const isAllowedComposersOpt=opt=>_makeMap_("postBuild,preMount,postMount,preUpdate,postUpdate,preDestroy,postDestroy,defineConfig,useSignals,useSlots,useTransmit,useReceiver,useContext,useParams,onEffect,onTracked,onCatch,onSlotRender,onSlotEffect", opt);
   const adaptableComposers={
     params:useParams,
     postBuild,
@@ -514,8 +520,8 @@ const Houxit=(function(global){
     install:useInstall
   }
   const optionalAdapterrs="name,widgets,directives,mixins"
-  const isAllowedAdapterOpts=opt=>_mapValue( keys(adaptableComposers).join(','), opt);
-  const isNonDuplicateFunc=opt=>_mapValue("params,context,transmit", opt)
+  const isAllowedAdapterOpts=opt=>_makeMap_( keys(adaptableComposers).join(','), opt);
+  const isNonDuplicateFunc=opt=>_makeMap_("params,context,transmit", opt)
   function useInstall(callback){
     return _useInstallAdaptor(...arguments);
   }
@@ -542,7 +548,7 @@ const Houxit=(function(global){
     }
     return true
   }
-  const isAdapterOpt=opt=>_mapValue("params,preBuild", opt)
+  const isAdapterOpt=opt=>_makeMap_("params,preBuild", opt)
   function _useOptionsAdapter(instance={}){
     const response=validateCollectionArgs(arguments, {
       name:'useOptions',
@@ -631,7 +637,7 @@ const Houxit=(function(global){
     return  _combineCallbacksCalls_(...args);
   }
   const GLOBALS_ALLOWED ='Infinity,undefined,NaN,isFinite,isNaN,parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,BigInt,console,Error,Symbol'
-  const isGloballyAllowed = (key) =>/*@__PURE__*/ _mapValue(GLOBALS_ALLOWED, key);
+  const isGloballyAllowed = (key) =>/*@__PURE__*/ _makeMap_(GLOBALS_ALLOWED, key);
   const argumentsValidator={
     name:"",
     max:Infinity,//maximum arguments in number
@@ -754,9 +760,12 @@ const Houxit=(function(global){
     }
   }
   function deferTokenComputedGetter(computed__Token, effective, watchers){
-    if(computed__Token[refInternalEffectKey].updateFlags){
+    const { initial, updateFlags, subscribers, ModelInstance, computed } =
+    computed__Token[refInternalEffectKey];
+    if(!deepEqualityCheck(initial,
+    callDepsGetters(subscribers)) || updateFlags){
       computed__Token[refInternalEffectKey].updateFlags=0;
-      const getCookie = computed__Token[refInternalEffectKey].computed.call(computed__Token[refInternalEffectKey].ModelInstance) ;
+      const getCookie = computed.call(ModelInstance) ;
       computed__Token[refInternalEffectKey].cache=getCookie;
       return getCookie;
     }
@@ -939,7 +948,7 @@ const Houxit=(function(global){
       enumerable
     });
     define(this, refGenreId, { 
-      value: `[[[_${ isReadonly ? "Readonly" : "Reactive" }__Token_]]]`,
+      value: `[[[${ isReadonly ? "readonly" : "reactive" }__Token]]]`,
       enumerable
     });
   }
@@ -958,7 +967,7 @@ const Houxit=(function(global){
     }
   }
   function _effectTriggerHook(fn, self){
-    if(this[refGenreId] === '[[[Readonly__Token_]]]' && isFalse(this[refIsShallowKey])) return ;
+    if(this[refGenreId] === '[[[readonly__Token]]]' && isFalse(this[refIsShallowKey])) return ;
     const watchers = this[refInternalEffectKey];
     let mutated=watchers.mutated;
     watchers.getHandler= fn.getHandler || pass;
@@ -977,12 +986,12 @@ const Houxit=(function(global){
     if(hasOwn(fn, 'init')) fn.init(watchers);
     return true //call the effectTrigger callback with a function parameter
   }
-  class Reactive__Token_ extends BaseToken{
+  class reactive__Token extends BaseToken{
     constructor(token, config){
       super(...arguments)
     }
   }
-  class Readonly__Token_ extends BaseToken{
+  class readonly__Token extends BaseToken{
     constructor(token, config){
       super(...arguments)
     }
@@ -1020,7 +1029,7 @@ const Houxit=(function(global){
         return target;
         // target = hydrateComputedTokenTransform(self, target, true);
       }
-      target = preventX( new Reactive__Token_( {
+      target = preventX( new reactive__Token( {
         data:target
       }, config ));
     }
@@ -1291,7 +1300,7 @@ const Houxit=(function(global){
       max:2,
       validators:[Object, String]
     })) return false;
-    if(!type || !_mapValue("of,in", type)) type='of';
+    if(!type || !_makeMap_("of,in", type)) type='of';
     else if(!isIterable(value) && !isNumber(value)){
       $debug_log(`No iterable .value prop received at parameter 1 object of the "iterate" helper macro`);
       return false;
@@ -1321,7 +1330,7 @@ const Houxit=(function(global){
     else if(isReadonlyToken(value)) return value;
     let [ mutate=false, key ]=metrics;
     config.isReadonly=true;
-    return preventX(new Readonly__Token_({
+    return preventX(new readonly__Token({
       data:value
     }, config ))
   }
@@ -1343,7 +1352,7 @@ const Houxit=(function(global){
     else if(isShallowToken(value)) return value;
     let [ mutate=false, key ]=metrics;
     config.isShallow=true;
-    return preventX(new Reactive__Token_({
+    return preventX(new reactive__Token({
       data:value
     }, config ));
   }
@@ -1375,10 +1384,10 @@ const Houxit=(function(global){
     return _toToken(...arguments);
   }
   function isReactiveToken(value){
-    return isToken(value) && value[refGenreId] === "[[[Reactive__Token_]]]";
+    return isToken(value) && value[refGenreId] === "[[[reactive__Token]]]";
   }
   function isReadonlyToken(value){
-    return isToken(value) && "[[[Readonly__Token_]]]" === value[refGenreId];
+    return isToken(value) && "[[[readonly__Token]]]" === value[refGenreId];
   }
   function isShallowToken(value){
     return isToken(value) && isTrue(value[refIsShallowKey]);
@@ -1711,7 +1720,7 @@ const Houxit=(function(global){
   }
   const Collections = new CollectionType();
   function getType(value){
-    return isArray(value) ? 'array' : isDate(value) ? 'date' : isSet(value) ? 'set' : isMap(value) ? 'map' : isTuple(value) ? 'tuple' : value instanceof AnyType ? 'any' : value instanceof NoneType ? 'none' : isToken(value) ? '_'+isReactiveToken(value) ? 'Reactive' : 'Readonly' +'__Token_' :typeof value;
+    return isArray(value) ? 'array' : isDate(value) ? 'date' : isSet(value) ? 'set' : isMap(value) ? 'map' : isTuple(value) ? 'tuple' : value instanceof AnyType ? 'any' : value instanceof NoneType ? 'none' : isToken(value) ? '_'+isReactiveToken(value) ? 'reactive' : 'readonly' +'__Token' :typeof  value;
   }
   function customTypeReader(type){
     //for reading names of custom dataTypes;
@@ -2371,6 +2380,10 @@ const Houxit=(function(global){
         hx_Element.$element=textContent;
       }
       if(len(subscribers)) hx_Element.VNodeManager.patchFlags.subscriptions.extend(subscribers);
+    }else if(is_hyperscript && isRerender) {
+      node = text;
+      hx_Element.$element=text;
+    
     }
     return node ;
   }
@@ -2413,7 +2426,8 @@ const Houxit=(function(global){
     filesFilter={
       $Events:null,
       $Model_Event:null,
-      $Notifiers:null
+      $Notifiers:null,
+      $StarterKit:null
     }
     rawChildren=null
     rawProps=null
@@ -2484,7 +2498,8 @@ const Houxit=(function(global){
       dexTransform:{
         sourcesArray:[],
         syntaxArray:[]
-      }
+      },
+      propsTraversers:new Tuple()
     })
     VN_Tree={
       KEYS_INDEXES:new Tuple(),
@@ -2597,7 +2612,7 @@ const Houxit=(function(global){
       return ;
     }
     const Valid_LoopType="of,in";
-    if(data.type && !_mapValue(Valid_LoopType, data.type)){
+    if(data.type && !_makeMap_(Valid_LoopType, data.type)){
       $debug_log(`((Iteration issue))\n\n"${data.type}" is not an iterator\n "of" or "in" only supported by Houxit`, self, true);
       return;
     }
@@ -2751,8 +2766,8 @@ const Houxit=(function(global){
   function has_Intersect_Prop(obj1, obj2 ){
     let res=false;
     for(const [key, value] of entries(obj1)){
-      if(isArray(obj1)) res=_mapValue(obj2, value);
-      else if(isPObject(obj1)) res=_mapValue(obj2, key);
+      if(isArray(obj1)) res=_makeMap_(obj2, value);
+      else if(isPObject(obj1)) res=_makeMap_(obj2, key);
       if(isTrue(res)) break;
     }
     return res;
@@ -2926,9 +2941,6 @@ const Houxit=(function(global){
     vnode=h(prototype_, memMove(vnode.props), memMove(vnode.children || []));
     vnode[factoryHXSelfInstance]=true;
     const ELEMENT= createHouxitElement(vnode, self, is_hyperscript, ctx, siblings, ssc, hx_Element);
-    for(let tick of hx_Element.PropFlags.values()){
-      traversPropsTick(ELEMENT, tick, self[$$$operands].initializedRender);
-    }
     return ELEMENT;
   }
   function built_in_Build_widget(vnode, self, is_hyperscript, ctx, siblings, ssc, hx_Element){
@@ -2941,9 +2953,6 @@ const Houxit=(function(global){
     props.key = vnode.key;
     vnode=h(prototype_, props, memMove(vnode.children || []));
     const ELEMENT= createHouxitElement(vnode, self, is_hyperscript, ctx, siblings, ssc);
-    for(let tick of hx_Element.PropFlags.values()){
-      traversPropsTick(ELEMENT, tick, self[$$$operands].initializedRender);
-    }
     return ELEMENT;
   }
   function createPortalEntryDisplay(self, props){
@@ -2973,7 +2982,7 @@ const Houxit=(function(global){
     if(prototype_ === Motion){
       vnode.GeneticProvider={
         name:'hx:motion',
-        signals:['introStart', 'introEnd', 'outroStart', 'outroEnd'],
+        signals:['introstart', 'introend', 'outrostart', 'outroend'],
         params:{
           options:Object,
           transite:Any,
@@ -2985,7 +2994,8 @@ const Houxit=(function(global){
         name:"hx:memo",
         params:{
           test:Function
-        }
+        },
+        signals:['activated', 'deactivated']
       }
     }else if(prototype_ === Suspence){
       vnode.GeneticProvider={
@@ -3003,7 +3013,9 @@ const Houxit=(function(global){
       PropFlags:new Tuple()
     }
     Props_dilation_compile(vnode, self, hx_Element, {
-      is_hyperscript
+      is_hyperscript,
+      ctx,
+      ssc
     }, props_object);
     vnode.props=props_object;
     const resArgs=[vnode, self, is_hyperscript, ctx, siblings, ssc, hx_Element];
@@ -3014,6 +3026,14 @@ const Houxit=(function(global){
     else return generateWidgetBasedBuiltin(...resArgs);
   }
   function createHouxitElement(vnode, self, is_hyperscript, ctx, siblings, ssc,  hx_Element){
+    let starterKit;
+    const isRerender=self[$$$operands].initializedRender;
+    if(isRerender && vnode.filesFilter.memMoved) delete vnode.filesFilter.memMoved;
+    if(!vnode.filesFilter.memMoved){
+      starterKit=vnode;
+      vnode=memMove(vnode, true);
+      vnode.filesFilter.memMoved=true;
+    }
     ctx=smartDextCtxMerging(assign({}, ctx || {}), ssc || {});
     ssc=null;
     const saveGarbageContent = NormalizeDirGarbage(vnode.props||{});
@@ -3021,8 +3041,8 @@ const Houxit=(function(global){
     const hasDir=hasFor || has_conditional;
     let ELEMENT;
     const { prototype_ } = vnode;
-    const args=[vnode, self, is_hyperscript, ctx, siblings, ssc, hx_Element];
-    if(!is_hyperscript && hasDir ) ELEMENT = VNodeManager(self, vnode, null, hx_Element, siblings, saveGarbageContent, ctx);
+    const args=[vnode, self, is_hyperscript, ctx, siblings, ssc, hx_Element, starterKit];
+    if(!is_hyperscript && hasDir ) ELEMENT = VNodeManager(self, vnode, null, hx_Element, siblings, saveGarbageContent, ctx, starterKit);
     else if(isHouxitBuiltinSymbolWidget(prototype_)) ELEMENT = simulate_buitin_widget_syms(...args);
     else if(validHouxitWidget(prototype_)) ELEMENT = new HouxitWidgetElement(...args);
     else if(isString(prototype_)){
@@ -3070,7 +3090,7 @@ const Houxit=(function(global){
     }
     hx_Element._vnode_key=key || undefined;
   }
-  function HouxitTemplateGenerators(vnode, self, is_hyperscript=false, ctx, siblings, ssc, hx_Element, isWidget=false){
+  function HouxitTemplateGenerators(vnode, self, is_hyperscript=false, ctx, siblings, ssc, hx_Element, starterKit, isWidget=false){
     this.VNodeManager.vNodeClass=vnode;
     is_hyperscript=vnode.is_hyperscript;
     this.is_hyperscript=is_hyperscript;
@@ -3085,7 +3105,8 @@ const Houxit=(function(global){
     bufferDirSetups(self, props, this);
     const customElementsArgs=[...arguments];
     customElementsArgs.pop();
-    const element=generateTemplateElement(vnode, self, this, siblings, isRerender, customElementsArgs);
+    const element=generateTemplateElement(vnode, self, this, siblings,
+    vnode.IS_RENDERLESS, customElementsArgs, starterKit);
     if(!isRerender && isHouxitNativeElement(this)) HouxitElementLifeCircleHooks(self, element, this);
     this.$element=element;
     if(!isRerender){
@@ -3145,13 +3166,7 @@ const Houxit=(function(global){
       return this.NodeList.forEach(callback);
     }
     upload(callback){
-      let prevElement;
-      let nextElement;
-      this.VN_Tree.ELEMENTS.forEach((el, ind)=>{
-        nextElement=this.VN_Tree.ELEMENTS.at(ind+1);
-        callback(el, prevElement, nextElement);
-        prevElement=el;
-      });
+      this.VN_Tree.ELEMENTS.forEach((el, ind)=> callback(el));
     }
   }
   class HouxitRenderlessElement extends HouxitFragmentElement{
@@ -3163,16 +3178,16 @@ const Houxit=(function(global){
   class HouxitTextElement extends HouxitElement{
     constructor(text, self, hx_Element, fall){
       super();
-      const initializedRender=self[$$$operands].initializedRender;
+      const isRerender=self[$$$operands].initializedRender;
       this.is_hyperscript= hx_Element?.is_hyperscript ;
       if(hx_Element) this.LabContext=assign({}, hx_Element?.LabContext || {});
       if(!this.is_hyperscript && fall ) this.LabContext=smartDextCtxMerging(this.LabContext, fall);
-      this.$element=_createTextElement(self, text, this, initializedRender);
+      this.$element=_createTextElement(self, text, this, isRerender);
       if(this.render_tracked && isHouxitElement(hx_Element)) {
         hx_Element.render_tracked=this.render_tracked
         hx_Element.VNodeManager.patchFlags.isHoisted=true;
       }else if(this.render_tracked && isHouxitBuild(self)) self[$$$compiler].hoistedNodelist.add(this);
-      this.prototype_=initializedRender ? this.$element : this.$element.textContent;
+      this.prototype_=isRerender ? this.$element : this.$element.textContent;
     }
   }
   function createRenderlessElement(callback=pass){
@@ -3206,7 +3221,7 @@ const Houxit=(function(global){
   function dirMap(self, resolver, dir, hx_Element){
     if(isPObject(dir)){
       for(let [name, hook] of entries(dir)){
-        if(_mapValue(directivesHooksMap, name)){
+        if(_makeMap_(directivesHooksMap, name)){
           if(!isPFunction(hook)){
             $debug_log(`"${name} directive hook received at $$ is not a function`, self, true);
             return;
@@ -3275,10 +3290,10 @@ const Houxit=(function(global){
     KEYS_INDEXES.add(key);
     hx_Element.VN_Tree.LEAGUE_TREE[key]=[ child, index ];
   }
-  function generateTemplateElement(vnode, self, hx_Element, siblings, IS_RENDERLESS ){
+  function generateTemplateElement(vnode, self, hx_Element, siblings, IS_RENDERLESS, customElementsArgs, startsWith ){
     return _generateTemplateElement( ...arguments );
   }
-  function _generateTemplateElement(virtualNode, self, hx_Element, siblings, IS_RENDERLESS){
+  function _generateTemplateElement(virtualNode, self, hx_Element, siblings, IS_RENDERLESS, customElementsArgs, starterKit){
     const { prototype_ } = virtualNode;
     if(isString(prototype_) && IS_VALID_TAGNAME(prototype_)) return _createNativeElement(...arguments);
     else if(isString(prototype_)) return generateCustomNativeElement(...arguments );
@@ -3289,6 +3304,7 @@ const Houxit=(function(global){
     const argsCount=len(arguments);
     const is_hyperscript=hx_Element?.is_hyperscript || false;
     const isRerender=self[$$$operands]?.isRerender;
+    if(isRerender) return 
     const element=document.createElement(type);
     element._set_compiler_options(...arguments);
     return element
@@ -3304,7 +3320,7 @@ const Houxit=(function(global){
       enumerable
     });
   }
-  function _createNativeElement(virtualNode, self, hx_Element, siblings){
+  function _createNativeElement(virtualNode, self, hx_Element, siblings, IS_RENDERLESS, customElementsArgs, starterKit){
     let { type, props, children, key } = virtualNode;
     const argsCount=len(arguments);
     let element;
@@ -3339,7 +3355,7 @@ const Houxit=(function(global){
         const item= _$runModelBind(self, virtualNode.filesFilter['dir--raw'], hx_Element, true);
         if(item){
           const content=escapeDecoder(virtualNode.rawChildren);
-          if(!isRerender) element.innerHTML=content;
+          if(!isRerender) element.innerHTML=content; 
           else hx_Element.$element=content;
         }
       } else {
@@ -3375,7 +3391,7 @@ const Houxit=(function(global){
   function createNativeElement(virtualNode,  hx_Element, siblings, isRerender, IS_RENDERLESS  ){
     return _createNativeElement( ...arguments );
   }
-  function _createWidgetElement(virtualNode, self, hx_Element, siblings, IS_RENDERLESS){
+  function _createWidgetElement(virtualNode, self, hx_Element, siblings,IS_RENDERLESS, customElementsArgs, starterKit){
     let { type, props, children, prototype_ } = virtualNode;
     const is_hyperscript=hx_Element?.is_hyperscript;
     let buildInstance;
@@ -3580,7 +3596,7 @@ const Houxit=(function(global){
   function useBind(ref, config){
     return _useBind__(ref, config);
   }
-  const hasFilterInstance=(self, name)=>_mapValue(BUILT_IN_FILTERS, name) || _mapValue(self[$$$register].filters, name);
+  const hasFilterInstance=(self, name)=>_makeMap_(BUILT_IN_FILTERS, name) || _makeMap_(self[$$$register].filters, name);
   const normalize_Filter=(self, name)=>hasOwn(BUILT_IN_FILTERS, name) ? BUILT_IN_FILTERS[name] : self[$$$register].filters[name] || pass;
   function customFilterDebugger(value, filter){
     if(!canRender(value)){
@@ -3749,8 +3765,8 @@ const Houxit=(function(global){
   const HouxitDirectives="if,else,else-if,html,text,for,raw,slot,model,bind,on,scoped,provide,transite,animate,clone";
   const preCompiledDirs="if,else-if,else,for,raw";
   const buildUsableDirectives="scoped,model,clone,motion";
-  const isHyperscriptDirective=dir=>_mapValue(buildUsableDirectives, dir);
-  const isHouxitDirective=dir=>_mapValue(HouxitDirectives, dir);
+  const isHyperscriptDirective=dir=>_makeMap_(buildUsableDirectives, dir);
+  const isHouxitDirective=dir=>_makeMap_(HouxitDirectives, dir);
   
   const validIdentifierRegex=/([...]*[\w\d]+)/g;
   function trackExistentDextructureNamespace(self, syntaxes){
@@ -3980,14 +3996,22 @@ const Houxit=(function(global){
     }
     return transpiled.list();
   }
-  function resolveDiffing(class1, class2){
-    if(deepEqualityCheck(class1, class2)) return [];
-    for(let [key, index] of getIterator(class1)){
-      
-    }
+  function resolveClassDiffing(newClass, oldClass){
+    [ oldClass, newClass ] = [ new Tuple(...arrSet(oldClass)), new Tuple(...arrSet(newClass ))];
+    if(deepEqualityCheck(newClass, oldClass)) return ;
+    const insert=new Tuple();
+    const remove=new Tuple();
+    newClass.forEach((klass)=>{
+      if(!oldClass.has(klass)) insert.add(klass);
+    });
+    oldClass.forEach((klass)=>{
+      if(!newClass.has(klass)) remove.add(klass);
+    });
+    return [ insert, remove ];
   }
-  function parse_Class_Binding(self, item, element, hx_Element){
+  function parse_Class_Binding(self, item, element, hx_Element, patch, { is_hyperscript, $orgKey }){
     item=unwrap(item);
+    const [ subs ]= patch || [];
     const transform=mapClassTypeTransform(item, new Tuple());
     for(let [index, cls] of transform.entries()){
       cls=unwrap(cls)
@@ -3995,27 +4019,37 @@ const Houxit=(function(global){
         toggleClassNames(element, cls);
       }
     }
+    if(!is_hyperscript && !len(subs)) return;
+    hx_Element.VNodeManager.propsTraversers.add(function(observers, vnode){
+      item=_createElementPropsEffectBlock_(self, {
+        element, 
+        mode:'class', 
+        patch, 
+        bindings:{
+          value:memMove(item)
+        },
+        $orgKey
+      }, is_hyperscript, observers)
+    });
   }
   function toggleClassNames(element, classes, remove=false){
     const toggler=remove ? 'remove' : 'add';
     classes.split(' ').forEach((cls)=>{
-      if(cls)  element.classList[toggler](cls);
+      if(cls) element.classList[toggler](cls);
     })
   }
   function compileStyleProps(self, item, styleProps, element){
+    styleProps = styleProps || {};
     if(isPObject(item)){
       entries(item).forEach(([key, style])=>{
         if(!isString(unwrap(style))){ 
-          $debug_log(`Unrecognized stype property value \n\nat at\n "${key}" style property\n\n${element?.outerHTML || "" }`, self); 
-        return;
+          $debug_log(`"${key}" style prop: Unrecognized stype property value \nat at\n "${key}" style property\n\n${element?.outerHTML || "" }`, self); 
+          return;
         }
-         styleProps[toCamelCase(key)]=style;
-      })
-    }else if(isArray(item)){
-      for(const value of item.values()){
-        compileStyleProps(self, value, styleProps, element)
-      }
-    }else if(isString(item)){
+        styleProps[toCamelCase(key)]=style;
+      });
+    }else if(isArray(item)) item.forEach(value=>compileStyleProps(self, value, styleProps, element));
+    else if(isString(item)){
       let splited=item.trim().split(';');
       for(let styling of splited.values() ){
         if(styling && styling.includes(':')){
@@ -4026,14 +4060,25 @@ const Houxit=(function(global){
     }
     return styleProps;
   }
-  function parse_Style_Binding(self, item, element, hx_Element){
+  function parse_Style_Binding(self, item, element, metrics, hx_Element){
+    const { is_hyperscript, patch, $orgKey } = metrics;
     const styleProps=compileStyleProps(self, item, {}, element);
-    const prevStyles={};
-    const initializedRender=self[$$$operands]?.initializedRender;
     for(let [ prop, style ] of entries(styleProps)){
       style=unwrap(style)
       element.style[prop]=style;
     }
+    if(!is_hyperscript && !len(patch[0])) return;
+    hx_Element.VNodeManager.propsTraversers.add(function(observers, vnode){
+      item=_createElementPropsEffectBlock_(self, {
+        element, 
+        mode:'style', 
+        patch, 
+        bindings:{
+          value:memMove(item),
+        },
+        $orgKey
+      }, is_hyperscript, observers);
+    });
   }
   function fall_AttrName(key, attr){
     const Key_Binding={ 
@@ -4120,7 +4165,7 @@ const Houxit=(function(global){
     }
     binding.src=key;
     if(binding.directive && !binding.value){
-      const canBindDyy =_mapValue("provide,html,text,model,clone,scoped,transite,animate,bind,slot", binding.directive);
+      const canBindDyy =_makeMap_("provide,html,text,model,clone,scoped,transite,animate,bind,slot", binding.directive);
       if(canBindDyy)  binding.value= binding.key || binding.directive;
     }
     return binding;
@@ -4206,9 +4251,20 @@ const Houxit=(function(global){
     let { is_hyperscript, isRerender, patch, vNode } = metrics ;
     if(isRerender) return;
     let { key, value:attr, src } = bindings;
-    if(isHTMLBooleanAttributes(key)) BooleanAttributesManager(element, key, attr, { is_hyperscript }, hx_Element);
-    else if(key === 'class') parse_Class_Binding(self, attr, element, hx_Element);
-    else if(isHTMLIDLAttributes(key)) IDLPropsTransform(self, { key, attr}, element, hx_Element );
+    if(isHTMLBooleanAttributes(key)) BooleanAttributesManager(self, element, [ key, attr], { 
+      is_hyperscript,
+      patch,
+      $orgKey:src
+    }, hx_Element );
+    else if(key === 'class') parse_Class_Binding(self, attr, element, hx_Element, patch, {
+      is_hyperscript,
+      $orgKey:src
+    });
+    else if(isHTMLIDLAttributes(key)) IDLPropsTransform(self, [ key, attr], element, {
+      is_hyperscript,
+      patch,
+      $orgKey:src,
+    }, hx_Element );
     else if(isOnListener(src)) {
       attr=unwrap(attr);
       if(!validateType(attr, [Function, Array])){
@@ -4235,13 +4291,48 @@ const Houxit=(function(global){
       }
     }
   }
+  function _createElementPropsEffectBlock_(self, metrics, observer, vnode){
+    const { element, mode, patch, bindings, is_hyperscript, $orgKey }=metrics;
+    const [ subs, carrier, value ]=(patch || []);
+    let [ s, transform ] = carrier?.();
+    const newValue=is_hyperscript ? vnode.props[$orgKey] : transform;
+    if(deepEqualityCheck(newValue, bindings.value)) return bindings.value;
+    if(mode === 'class' || (mode === 'idl' && bindings.key === 'className')){
+      const [ insert, remove ] = resolveClassDiffing(mapClassTypeTransform(newValue, new Tuple()), mapClassTypeTransform(bindings.value, new Tuple()));
+      remove.forEach((klass)=>toggleClassNames(element, klass, true));
+      insert.forEach((klass)=>toggleClassNames(element, klass));
+    }else if(mode === 'bool'){
+      if((newValue || isString(newValue)) && !(bindings.value || isString(bindings.value))){
+        if (isHTMLIDLAttributes(bindings.key)) element[key]=attr;
+        else element.setAttribute(bindings.key, newValue||'');
+      }else{
+        if(!(newValue || isString(newValue)) && (bindings.value || isString(bindings.value))){
+          if(isHTMLIDLAttributes(bindings.key)) element[bindings.key]=false;
+          else element.removeAttribute(bindings.key);
+        }
+      }
+    }else if(mode === 'style'){
+      const styleProps=compileStyleProps(self, newValue, {}, element);
+      const oldStyleProps=compileStyleProps(self, bindings.value, {}, element);
+      for(let [ prop, style ] of entries(styleProps)){
+        style=unwrap(style);
+        if(!deepEqualityCheck(style, oldStyleProps[prop])) element.style[prop]=style;
+      }
+      keys(oldStyleProps).forEach(style=>{
+        if(!hasOwn(styleProps, style)) element.style[style]="";
+      });
+    }else if(mode === 'idl') element[bindings.key]= newValue || "";
+    else if(mode === 'ref');
+    else if(isUndefined(mode))  element.setAttribute(bindings.key, newValue || "");
+    return newValue;
+  }
   function genericLifecircleTransmitter(args, hooksTuple, name, el){
     const [ callback ]=args;
     if(!validateCollectionArgs(args, {
       count:1,
       validators:[Function],
       required:[true],
-      name:"attach=(ctx)=>ctx."+name+"()"
+      name:"attach=function(ctx){ctx."+name+"()}"
     })) return;
     hooksTuple.add(callback);
     return undefined;
@@ -4252,7 +4343,7 @@ const Houxit=(function(global){
       max:3,
       validators:[[String, Array], Function, [String, Array]],
       required:[true, true],
-      name:"attach=(ctx)=>ctx.on()"
+      name:"attach=Function(ctx){ctx.on()}"
     })) return;
     let [ events, callback, modifiers ] = args;
     events=isString(events) ? events.split(".") : events;
@@ -4271,7 +4362,7 @@ const Houxit=(function(global){
       max:3,
       validators:[[Object, Function], Any, [String, Array]],
       required:[true, true],
-      name:"attach=(ctx)=>ctx.use()"
+      name:"attach=function(ctx){ctx.use()}"
     })) return;
     _With_Custom_Directives(self, {
       value:directive,
@@ -4352,15 +4443,27 @@ const Houxit=(function(global){
     const slotName=element.name;
     self[$$$compiler].scopeSlotsBindings[slotName].bindings=value;
   }
-  function IDLPropsTransform(self, props, element, hx_Element ){
-    const { key, attr } = props;
-    const initializedRender=self[$$$operands]?.initializedRender;
-    const is_hyperscript=hx_Element.is_hyperscript
-    if(key === 'style') return parse_Style_Binding(self, attr, element, hx_Element);
+  function IDLPropsTransform(self, props, element, metrics, hx_Element ){
+    const [ key, attr ] = props;
+    const { is_hyperscript, patch, $orgKey } = metrics;
+    if(key === 'style') return parse_Style_Binding(self, attr, element, metrics, hx_Element);
     else if(key === "className") {
       const transform=mapClassTypeTransform(attr, new Tuple());
       element.className=element.className+" "+transform.join(" ");
     }else element[key]=attr ;
+    if(!is_hyperscript && !len(patch[0])) return;
+    hx_Element.VNodeManager.propsTraversers.add(function(observers, vnode){
+      attr=_createElementPropsEffectBlock_(self, {
+        element, 
+        mode:'idl', 
+        patch, 
+        bindings:{
+          value:memMove(attr),
+          key
+        },
+        $orgKey
+      }, is_hyperscript, observers);
+    });
   }
   const isillegalKeyBinding=(prop, is_hyperscript)=>is_hyperscript && (hasAsterisks_bind(prop) || has$$_bind(prop) || hasAt_bind(prop)) || hasAsh_bind(prop);
   function Props_dilation_compile(vNode, self, hx_Element, metrics, element){
@@ -4369,6 +4472,7 @@ const Houxit=(function(global){
     hx_Element = !isHouxitElement(hx_Element) ? null : hx_Element;
     if(!isPObject(props)) return element;
     const is_hyperscript= metrics.is_hyperscript;
+    const ctx=metrics.ctx;
     metrics = { 
       isRerender: self[$$$operands]?.initializedRender,
       is_hyperscript: self ? self[$$$core].map.is_hyperscript : hx_Element ? hx_Element.is_hyperscript : undefined,
@@ -4376,8 +4480,9 @@ const Houxit=(function(global){
     }
     let propsIndex=0;
     metrics.shatteredFlags=shatteredFlags;
+    metrics.ctx=ctx;
     entries(unwrap(props)).forEach(function([key, attr ]){
-      metrics.vNode=vNode
+      metrics.vNode=vNode;
       attributes_hydration({
         key,
         attr
@@ -4387,12 +4492,25 @@ const Houxit=(function(global){
   function specialPropsPrefix(self, props, element, hx_Element){
     
   }
-  function BooleanAttributesManager(vnode, [ key, attr ], is_hyperscript, hx_Element){
-    attr=unwrap(attr)
-    if(exists(attr) || isString(attr)) {
-      if (isHTMLIDLAttributes(key)) vnode[key]=attr;
-      else vnode.setAttribute(key, attr||'');
+  function BooleanAttributesManager(self, element, [ key, attr ], { is_hyperscript, patch, $orgKey }, hx_Element){
+    attr=unwrap(attr);
+    if(attr || isString(attr)) {
+      if (isHTMLIDLAttributes(key)) element[key]=attr;
+      else element.setAttribute(key, attr||'');
     }
+    if(!is_hyperscript && !len(patch[0])) return;
+    hx_Element.VNodeManager.propsTraversers.add(function(observers, vnode){
+      attr=_createElementPropsEffectBlock_(self, {
+        element, 
+        mode:'bool', 
+        patch, 
+        bindings:{
+          value:memMove(attr),
+          key
+        },
+        $orgKey
+      }, is_hyperscript, observers);
+    });
   }
   function generateCustomDirBinding(self, hx_Element, bindings){
     const { modifiers, deepKeys } = bindings;
@@ -4538,27 +4656,21 @@ const Houxit=(function(global){
     const runBinding= ()=> _$runModelBind(self, value, hx_Element, !modifiers.has('bind'))
     if(!is_hyperscript) {
       [ subscribers, value ] = effectDependencyTracking(self, function(){
-        return runBinding()
+        return runBinding();
       } )
     }else value= runBinding();
-    value=unwrap(value)
+    value=unwrap(value);
     const innerProp=isTrue(text) ? 'innerText' : 'innerHTML';
     if( isPrimitive(value)) {
-      value=compileToRenderable(value)
+      value=compileToRenderable(value);
       if(!isNativeElement(vnode) && value)  self.__public_model__.$attrs[innerProp]=value;
       else if(value) vnode[innerProp]=value;
     }
-    traversPropsTick(hx_Element, {
-      key:innerProp,
-      directive:text ? 'text' :'html',
-      value,
-      subs:subscribers,
-      }, initializedRender );
   }
   function $$dir_SLOT(self, bindings, vnode, hx_Element, metrics){
     let { value, modifiers, key } = bindings;
     if(!key){
-      $debug_log(`"$$slot" directive has no key mapping defined to the "slot" element\n\nfailed to normalize slot directive`);
+      $debug_log(`slot key: "$$slot" directive has no key mapping name defined to the "slot" element\n\nfailed to normalize slot directive`);
       return;
     }
     modifiers=new Set(modifiers);
@@ -4587,36 +4699,26 @@ const Houxit=(function(global){
     }
     return `($event)=>${item}`;
   }
-  function traversPropsTick(hx_Element, options, isRerender){
-    //options expects { directive:string, key:string, value:any, subs:array, deepKeys:array }
-    const patchFlags = isHouxitElement(hx_Element) ? hx_Element.VNodeManager.patchFlags : hx_Element;
-    if(!isRerender && len(options.subs)){
-      patchFlags.subscriptions.extend(options.subs);
-      patchFlags.PropFlags.add(options);
-    }
-  }
   function $$dir_BIND(self, binding, el, hx_Element, metrics){
-    const { is_hyperscript, shatteredFlags } = metrics
+    const { is_hyperscript, shatteredFlags, ctx } = metrics
     let { key, value:item, modifiers, deepKeys, src }= binding;
     item=__dilateHandler(self, { 
       key,
       item,
       src
     }, hx_Element, is_hyperscript );
-    let [ subscribers , transform ] = effectDependencyTracking(self, function(){
-      return isString(item) ? _$runModelBind(self, item, hx_Element ) : item ;
+    const carrierGetter=()=>effectDependencyTracking(self, function(){
+      return isString(item) ? _$runModelBind(self, item, hx_Element || ctx ) : item ;
     });
+    let [ subscribers , transform ] =carrierGetter();
     const isRerender=self[$$$operands]?.initializedRender;
     const response=transform;
-    const patch={
-      subscribers
-    }
     transform = unwrap(transform);
     metrics=assign({ 
-      patch
+      patch:[subscribers, carrierGetter, transform]
     }, metrics);
     if(!key && !isPObject(transform)) {
-      $debug_log(`"$$bind" Directive attributes binding expects a plain props object value when not chained to any attribute/property argument`, self, true);
+      $debug_log(`"$$bind" directive attributes binding expects a plain props object value when not chained to any attribute/prop argument`, self, true);
       return 
     }else if(!key && isPObject(transform)) {
       for(const [ ky, attr ] of entries(transform)){
@@ -4632,13 +4734,6 @@ const Houxit=(function(global){
       data:response
     }, self, hx_Element, metrics, el);
     hx_Element=!isHouxitElement(hx_Element) ? shatteredFlags : hx_Element;
-    traversPropsTick(hx_Element, {
-      key,
-      directive:'bind',
-      value:transform,
-      subs:subscribers,
-      deepKeys
-    }, isRerender);
   }
   function $$dir_ON(self, bindings, node, hx_Element, metrics){
     let { key, value:attr, deepKeys, modifiers, src } = bindings;
@@ -4837,7 +4932,7 @@ const Houxit=(function(global){
     const tag=vnode.localName;
     const type=vnode.type;
     if(IS_ELEMENT_NODE(vnode) && Is_Form_Element(vnode)){
-      if(tag === 'input') return _mapValue(['file'], type) ? 'change' : _mapValue(['button','submit','reset'], type) ? 'click' : _mapValue(['image','hidden'], type ) ? 'change' : 'input';
+      if(tag === 'input') return _makeMap_(['file'], type) ? 'change' : _makeMap_(['button','submit','reset'], type) ? 'click' : _makeMap_(['image','hidden'], type ) ? 'change' : 'input';
       return tag === 'form' ? 'submit' : tag === 'select' ? 'change' : tag === 'textarea' ? 'input' : 'input';
     }
   }
@@ -5253,7 +5348,7 @@ const Houxit=(function(global){
       index++;
       if(hasUpperCase(key)){
         const transpiled=to_kebab_case(key);
-        if(_mapValue(props, transpiled) && !_mapValue(paramsKeys, transpiled)){
+        if(_makeMap_(props, transpiled) && !_makeMap_(paramsKeys, transpiled)){
           if(isPObject(params)) {
             define(garbage, transpiled, { value:params[key], enumerable, configurable});
             delete props[transpiled];
@@ -5264,7 +5359,7 @@ const Houxit=(function(global){
   }
   function paramsKeysDefer(self, paramsSet, essenceTags, ){
     const [ props, ind , param ] = essenceTags;
-    if(!_mapValue(props || {}, ind)){
+    if(!_makeMap_(props || {}, ind)){
       paramsSet[ind]=undefined;
       return false;
     }else if(props ){
@@ -5279,7 +5374,7 @@ const Houxit=(function(global){
   }
   function arrayParamsResolver(self, paramsSet, metrics ){
     const [ props, param ] = metrics ;
-    if(props && _mapValue(props, param)){
+    if(props && _makeMap_(props, param)){
       const value=!props[param] && !isBoolean(props[param]) ? undefined : props[param];
       paramsSet[param]=value;
     }else paramsSet[param]=undefined; 
@@ -5296,13 +5391,13 @@ const Houxit=(function(global){
     }else if(!hasProp(param, 'type')){
       $debug_log(`The type validator property is  required\n  Mising at "${ind}" param`, self, true);
       response = false;
-    }else if(!validateType(param.type, [Function, Array]) ){
+    }else if(!validateType(param.type, [Function, Array, Type]) ){
       $debug_log(`unexpected value passed as the type validator option\n expects a function or an Array of type function`, self, true);
       response = false;
     }else if(hasProp(param,'validator') && !isPFunction(param.validator)){
       $debug_log(`The "validator option must be a  function\n\nat ${ind} ${PN}`, self, true);
       response = false;
-    }else if(isTrue(param.required) && !_mapValue(props || {}, ind)){
+    }else if(isTrue(param.required) && !_makeMap_(props || {}, ind)){
       $debug_log(`Params validation error........\n\nThe ${PN+ ' of the '+'"'+self[$$$ownProperties].name+'"'+' widget' } params is required and seems not to  be provided "\nrequired ${PN} is missing\n\nat at\n  ....."${ind}"  param`, self, true);
       paramsSet[ind]=undefined;
       response = false;
@@ -5449,7 +5544,7 @@ const Houxit=(function(global){
     return vnode;
   }
   const houxitProps="props,children";
-  const isHouxitProp=prop=>_mapValue(houxitProps, prop);
+  const isHouxitProp=prop=>_makeMap_(houxitProps, prop);
   const initBuildInstaceKey=Symbol("<<<!@---initBuild---@>>>");
   const widgetTypeKey=Symbol("[[[widget-typing-system]]]");
   function registerTemplateClasses(self, options, vnode){
@@ -5540,8 +5635,8 @@ const Houxit=(function(global){
   }
   function assignSlot(self, slot, content, name, assynedSlots, renderedSlotsList, tillMount){
     if(content && isHouxitElement(content) && !hasOwn(renderedSlotsList, name)){
-      self[$$$compiler].template.VN_Tree.ELEMENTS.delete(slot);
-      slot.replaceWith(content.$element||"");
+      self[$$$compiler].template.VN_Tree.ELEMENTS.replace(slot, content.$element);
+      slot.replaceWith(content.$element);
       assynedSlots.add(name);
       renderedSlotsList[name]=content
     }
@@ -5557,9 +5652,9 @@ const Houxit=(function(global){
   function _$slotHydrationRenderer(self, opts, vnode_build){
     const slots=self[$$$core].slots;
     if(!len(slots) || !vnode_build || !isHouxitElement(vnode_build) || isHouxitTextElement(vnode_build)) return vnode_build ;
-    const renderedSlotsList={}
+    const renderedSlotsList={};
     const slot_elements=resolveSlotsFilter( self, vnode_build ) ;
-    const assynedSlots=new Tuple()
+    const assynedSlots=new Tuple();
     for(const [ slotN, slot_el ] of entries(slot_elements)){
       if(hasOwn(slots, slotN) && !assynedSlots.has(slotN)) {
         assignSlot(self, slot_el, slots[slotN](self), slotN, assynedSlots, renderedSlotsList);
@@ -5571,10 +5666,10 @@ const Houxit=(function(global){
         const slotContent=hasOwn(slots, 'default') ? slots.default(self) : null;
         if(slotContent) vnode_build.$element.append(slotContent.$element);
         assynedSlots.add('default');
-        renderedSlotsList['default']=slotContent
+        renderedSlotsList['default']=slotContent;
       }
     }
-    if(!len(renderedSlotsList)) return vnode_build 
+    if(!len(renderedSlotsList)) return vnode_build ;
     for(const [name, content] of entries(renderedSlotsList) ){
       self[$$$core].slotsFactory.renderedSlotsList[name]=content;
     }
@@ -5599,7 +5694,7 @@ const Houxit=(function(global){
   const configOptionsSettings = keys(ConfigValidator).join(',') ;
   function mapSettingCheck(self, key, setting){
     self=!isHouxitBuild(self) ? null : self
-    if(!_mapValue(configOptionsSettings, key)){
+    if(!_makeMap_(configOptionsSettings, key)){
       $debug_log(`unrecognised settings option found in buildConfig defineConfig  at   at\n"${key} name property`,self, isHouxitBuild(self));
       return false;
     }else if(!validateType(setting, ConfigValidator[key])){
@@ -5642,7 +5737,7 @@ const Houxit=(function(global){
       }
       if(hasOwn(options, 'flushType')){
         const flushType=options.flushType
-        if(!isString(flushType) && !_mapValue(flushOptions, flushType)){
+        if(!isString(flushType) && !_makeMap_(flushOptions, flushType)){
           $debug_log(`unrecognised flushType options received\n\nvakue "${flushType}" is not a vailid flushType`, self, true);
         }else this.flushType=flushType
       }
@@ -5686,7 +5781,7 @@ const Houxit=(function(global){
   function _EffectDependencyNotifier(self){
     const postEffList=[];
     self[$$$operands]._OBSERVERS.values().forEach((obs)=>{
-      if(obs.flushType==='post') postEffList.push(()=>obs.trigger());
+      if(obs.flushType==='post') postEffList.push(()=>obs.trigger(self));
       else obs.trigger(self);
     });
     return function(){
@@ -5830,7 +5925,6 @@ const Houxit=(function(global){
         configurable 
       });
     }
-    // delete vnode.props[$$$Events];
   }
   function $construct_With_Signals(self, options, in_build=false, vnode){
     if(in_build) vnode = options
@@ -5865,7 +5959,7 @@ const Houxit=(function(global){
     if(!hasOwn(options, optName) || !len(options[optName])) return;
     const sName=optName.slice(0, -1)
     for(const [name, filter] of entries(options[optName])){
-      if(optName === 'blocks' ? isBuiltinBlocks(name) : _mapValue(BUILT_IN_FILTERS, name)){
+      if(optName === 'blocks' ? isBuiltinBlocks(name) : _makeMap_(BUILT_IN_FILTERS, name)){
         $debug_log(`registration failure\nFailed to register the custom ${sName} with the name "${name}\n\n Which collides with a BUILT_IN_${sName.toUpperCase()} name\nregistration FAILED___`,self, true);
         continue;
       }else if(!validateType(filter, [ Function, Object] )) {
@@ -7071,7 +7165,7 @@ const Houxit=(function(global){
     const registeredOpts=getGlobalRegistery(self).legalOptions;
     const _opts=self[$$$operands]._OPTIONS;
     for(let [ key, opt] of entries(_opts)){
-      if(!_mapValue(registeredOpts, key)){
+      if(!_makeMap_(registeredOpts, key)){
         $debug_log(`Unrecognised option found\n\n
           "${key}" option is not a valid widget option or not registered,
           \n\n
@@ -7201,12 +7295,14 @@ const Houxit=(function(global){
   }
   function hydrateComputedTokenTransform(self, computed, composed, config){
     if(composed && !isPFunction(computed) && !isGettersObject(computed)){
-      $debug_log(`computedToken macro at Parameter 1 expects a getter function or a descriptor object of a "get" and an optional "set" property methods`, self, true);
+      $debug_log(`computedToken:: computedToken macro at Parameter 1 expects a getter function or a descriptor object of a "get" and an optional "set" property methods`, self, true);
       computed = pass;
     }
     const [ computedTokenData, subscribers ] =composedTokenHydration(self, computed, config);
     computedTokenData[refInternalEffectKey][ '[[[computed__Token]]]' ] = true;
     computedTokenData[refInternalEffectKey].computed=( isPFunction(computed) ? computed : computed.get ).bind(self.__public_model__)  ;
+    computedTokenData[refInternalEffectKey].subscribers.extend(subscribers)
+    computedTokenData[refInternalEffectKey].Initial=callDepsGetters(subscribers);
     if( len( subscribers ) ) {
       self.__public_model__._observe( subscribers , () => {
         if( isComputedToken( computedTokenData ) ) {
@@ -7215,7 +7311,9 @@ const Houxit=(function(global){
             computedTokenData[refInternalEffectKey].ModelInstance = self.__public_model__;
           }
         }
-      } )
+      }, {
+        flushType: "post"
+      })
     }
     return computedTokenData;
   }
@@ -7418,6 +7516,8 @@ const Houxit=(function(global){
     }
     try{
       // use unMountVNode vnofe macro hete
+      unMountVNode(this.build)
+      // log(this)
       /*
       delete this[$$$operands];
       delete this[$$$core];
@@ -7432,7 +7532,7 @@ const Houxit=(function(global){
       $debug_log(err);
       return false;
     }
-    return freeze(this);
+    return Object.freeze(this);
   }
   function destroy(){
     return _Build_destroy.call(this, ...arguments);
@@ -7493,7 +7593,7 @@ const Houxit=(function(global){
     const registered=options.optionsRegistery;
     const globals=getGlobalRegistery(self);
     entries(options.optionsRegistery).forEach(([key, validator])=>{
-      if(_mapValue(globals.legalOptions, key)){
+      if(_makeMap_(globals.legalOptions, key)){
         $debug_log(`${key} custom optionsRegistery already exists in the registery record`, self, true);
         return;
       }
@@ -7603,26 +7703,26 @@ const Houxit=(function(global){
   }
   function posixVNodeTransform(self, build){
     self[$$$core].posixVNode = new HouxitTextElement("", self);
-    build.$element.prepend(self[$$$core].posixVNode.$element);
+    if(build) build.$element.prepend(self[$$$core].posixVNode.$element);
+    else build=self[$$$core].posixVNode;
+    return build;
   }
   function Render_Template( self , initBuild ) {
     const instance =isBuiltinWidgetBuild(self)  ? self[$$$core].virtualNode.filesFilter.INSTANCE_NORMALIZER : self;
     const is_hyperscript=self[$$$core].map.is_hyperscript;
     const isRerender=self[$$$operands].initializedRender;
     if(isPFunction(initBuild)) initBuild = initBuild( instance );
-    if(is_hyperscript) {
-      initBuild=_HouxitTemplateParser(!isArray(initBuild) ? [initBuild] : initBuild, instance, null, null, null, {
-        official:true
-      });
-    }
+    if(is_hyperscript) initBuild=_HouxitTemplateParser(!isArray(initBuild) ? [initBuild] : initBuild, instance, null, null, null, {
+      official:true
+    });
     if(isArray(initBuild)) initBuild= new HouxitFragmentElement(initBuild, self, null);
     self[$$$compiler].template=initBuild;
-    if(!isRerender) posixVNodeTransform(self, initBuild);
+    if(!isRerender) initBuild=posixVNodeTransform(self, initBuild);
     if(!isRerender && !isBuiltinWidgetBuild(self)) widgetSlotsManager(self, self[$$$core].opts, self[$$$core].virtualNode);
     initBuild = self[$$$compiler].templateProcessor( instance , initBuild) ;
     return initBuild ;
   }
-  function _deferTick( fn ) {
+  async function _deferTick( fn ) {
     const response = validateCollectionArgs(arguments, {
       count:1,
       validators:[Function],
@@ -7735,9 +7835,8 @@ const Houxit=(function(global){
         });
       }else if(key !== tempK ){//if render no more not at this index
         if(tempIndexes.has(key)){//but still exists in new vNodes
-          const vnodeTM=tempLeagues[tempK]
-          let targetElem= tempK ? transformTargetElement(vnodeTM[0], null, true)
-          : undefined;
+          const vnodeTM=tempLeagues[tempK];
+          let targetElem= tempK ? transformTargetElement(vnodeTM[0], null, true) : undefined;
           const posixElem=document.createTextNode("");
           if(tempK) targetElem.after(posixElem);
           exchangeRecorder.push({
@@ -7768,12 +7867,12 @@ const Houxit=(function(global){
         }
       }
     }
-    fractional_diffing_transform(self, exchangeRecorder, Template, tempIndexes, tempLeagues, LEAGUE_TREE, KEYS_INDEXES, observer, forAppending, forInsertion, forRemovals);
+    fractional_diffing_transform(self, exchangeRecorder, Template, EffectVNode, tempIndexes, tempLeagues, LEAGUE_TREE, KEYS_INDEXES, observer, forAppending, forInsertion, forRemovals);
     tempIndexes.arrange(KEYS_INDEXES.list());
   }
-  function fractional_diffing_transform(self, exchangeRecorder, Template, tempIndexes, tempLeagues, LEAGUE_TREE, KEYS_INDEXES, observer, forAppending, forInsertion, forRemovals ){
+  function fractional_diffing_transform(self, exchangeRecorder, Template, EffectVNode, tempIndexes, tempLeagues, LEAGUE_TREE, KEYS_INDEXES, observer, forAppending, forInsertion, forRemovals ){
     const waitForAddBeforMove=[];
-    effect_Position_Transform(self, exchangeRecorder, Template, {
+    effect_Position_Transform(self, exchangeRecorder, Template, EffectVNode, {
       tempIndexes,
       tempLeagues,
       LEAGUE_TREE,
@@ -7788,6 +7887,15 @@ const Houxit=(function(global){
       const [key, tempK] = keys;
       tempLeagues[key]=[Element, tempInd ];
       posixElem.after(Element.$element);
+      const parentList=Template.VN_Tree.ELEMENTS;
+      const start=parentList.has(posixElem) ? parentList.indexOf(posixElem) : undefined;
+      generateWrapElementAction(Element, (el)=>{
+        if(isUndefined(start)) return;
+        parentList.splice(start, 0, el);
+        start++;
+      });
+      Template.NodeList.splice(EffectVNode.NodeList.indexOf(Target), 0,
+      Element);
       cleanup_zip.add(()=> posixElem.remove());
       observer.mutated=true;
     }
@@ -7800,16 +7908,24 @@ const Houxit=(function(global){
       const [ targetBox, targetInd ]=tempLeagues[adjKey];
       tempLeagues[key]=[Element, index ];
       const targetElem=transformTargetElement(targetBox, null, true);
+      generateWrapElementAction(targetBox, (el)=>{
+        Template.VN_Tree.ELEMENTS.add(el);
+      });
+      Template.NodeList.add(targetBox);
       targetElem.after(Element.$element);
       observer.mutated=true;
     }
     forAppending.splice(0);
     for(const [ key, Element, index ] of forRemovals.values()){
+      generateWrapElementAction(Element[0], (el)=>{
+        Template.VN_Tree.ELEMENTS.delete(el);
+      });
+      Template.NodeList.delete(Element[0]);
       unMountVNode(Element[0]);
       observer.mutated=true;
       delete tempLeagues[key];
     }
-    for(const { elements, index, keys } of values(waitForAddBeforMove)){
+    for(const { elements, index, keys } of waitForAddBeforMove.values()){
       const [ element, ] = elements;
       const [ ind, tempInd ] = index;
       const [ key, targekey ]=keys;
@@ -7819,11 +7935,8 @@ const Houxit=(function(global){
       const parent=targetElem.parentNode;
       const posixElem=document.createTextNode("");
       targetElem.after(posixElem);
-      let dial;
-      generateWrapElementAction(element[0], (el)=> {
-        parent.moveBefore(el, !dial ? posixElem : dial);
-        dial=el;
-      });
+      generateWrapElementAction(element[0], (el)=> parent.moveBefore(el,
+      posixElem));
       observer.mutated=true;
       cleanup_zip.add(function(){
         tempLeagues[key][1]=tempInd;
@@ -7838,7 +7951,7 @@ const Houxit=(function(global){
     cleanup_zip.forEach((cleanup)=> cleanup());
     cleanup_zip.clear();
   }
-  function effect_Position_Transform(self, exchangeRecorder, Template, metrics){
+  function effect_Position_Transform(self, exchangeRecorder, Template, EffectVNode, metrics){
     const { observer, tempIndexes, tempLeagues, LEAGUE_TREE, KEYS_INDEXES, waitForAddBeforMove } = metrics;
     let flow=0;
     const cleanup_zip=new Tuple();
@@ -7856,11 +7969,7 @@ const Houxit=(function(global){
           });
         }
       }else{
-        let dial;
-        generateWrapElementAction(element[0], (el)=> {
-          parent.moveBefore(el, !dial ? posixElem : dial);
-          dial=el;
-        });
+        generateWrapElementAction(element[0], (el)=> parent.moveBefore(el, posixElem ));
         observer.mutated=true;
         cleanup_zip.add(function(){
           tempLeagues[key][1]=tempInd;
@@ -7880,9 +7989,14 @@ const Houxit=(function(global){
       RerenderingTextsContents(self, hx_Element, vNode, observer, parent);
       return;
     }else if(isHouxitWidgetElement(hx_Element)){
-      // Widget_Effect_Trigger(self, hx_Element, vNode, observer, vNode);
+      // WidgetEffectTrigger(self, hx_Element, vNode, observer, vNode);
     }else if(isRenderlessElement(hx_Element)) return;
     resolvePatchAlgorithm(self, hx_Element, vNode, observer, pass, false);
+    if(isHouxitNativeElement(hx_Element)){
+      const traverse=hx_Element.VNodeManager.propsTraversers;
+      if(!len(traverse)) return;
+      traverse.forEach( trackAttr => trackAttr( observer, vNode.VNodeManager.vNodeClass));
+    }
   }
   function __createRerenderBlock(self, vnode){
     self[$$$operands].initializedRender=false;
@@ -7898,8 +8012,20 @@ const Houxit=(function(global){
       const targetElem=transformTargetElement(hx_Element, null, true);
       targetElem.after(posixElem);
       if(parent) parent.VN_Tree.LEAGUE_TREE[key]=[NewNode, index];
+      const parentList=parent.VN_Tree.ELEMENTS;
+      let start=undefined;
+      generateWrapElementAction(hx_Element, (el)=>{
+        if(parentList.has(el)){
+          if(isUndefined(start)) start=hx_Element.VN_Tree.ELEMENTS.indexOf(el);
+          parentList.delete(el);
+        }
+      });
       unMountVNode(hx_Element);
+      parent.NodeList.replace(hx_Element, NewNode);
       posixElem.before(NewNode.$element);
+      generateWrapElementAction(NewNode, (el)=>{
+        parentList.splice(start, 0, el);
+      });
       posixElem.remove();
       observer.mutated=true;
       return ;
@@ -7916,21 +8042,20 @@ const Houxit=(function(global){
     }
     return IS_ELEMENT_NODE(targetElem) || IS_TEXT_NODE(targetElem) ? targetElem : fallback;
   }
-  function triggerWidgetEffect(vnode, self){
-    
-  }
   function unMountVNode(vnode){
     if(isHouxitWidgetElement(vnode)){
       vnode.widget_instance.destroy();
-    }else if(isHouxitFragmentElement(vnode)) iterate(vnode.NodeList)((el)=> unMountVNode(el));
+    }else if(isHouxitFragmentElement(vnode)) vnode.upload((el)=> {
+      el.remove();
+    });
     else if(!isRenderlessElement(vnode)) vnode?.$element?.remove();
   }
-  function generateWrapElementAction(vnode, callback, prevElement){
+  function generateWrapElementAction(vnode, callback){
     if(isHouxitWidgetElement(vnode)) vnode=WidgetElementUnwrap(vnode);
     if(isHouxitFragmentElement(vnode)) vnode.upload(callback);
     else if(!isRenderlessElement(vnode)) callback(vnode.$element);
   }
-  function Widget_Effect_Trigger(self, node, virtualElement, observer, virtualNode){
+  function WidgetEffectTrigger(self, node, virtualElement, observer, virtualNode){
     const is_hyperscript=self[$$$core].map.is_hyperscript;
     const PropFlags = node.VNodeManager.patchFlags.PropFlags;
     
@@ -8039,7 +8164,7 @@ const Houxit=(function(global){
     return _Houxit_token_GENERATOR_( config, Test_Callback );//type,size,
   }
   const builtInWidgetTypes="Build,Self,Motion,Provider,Suspense,Portal,Fragment,Memo";
-  const nonSBIW=ww=> _mapValue("suspense,memo,motion,provider", ww.slice(3));
+  const nonSBIW=ww=> _makeMap_("suspense,memo,motion,provider", ww.slice(3));
   function Built_in_widget_Transform(self, vNode, hx_Element){
     const type=vNode.prototype_[$$BuiltinWidgetKey].slice(3);
     vNode.filesFilter.INSTANCE_NORMALIZER=self;
@@ -8091,7 +8216,7 @@ const Houxit=(function(global){
         return false;
       }else vNode.GeneticProvider=normalize_Block(self, tagname)
       return true
-    }else if(_mapValue(BUILT_IN_WIDGETS, tagname)){
+    }else if(_makeMap_(BUILT_IN_WIDGETS, tagname)){
       widget=BUILT_IN_WIDGETS[tagname];
     }
     widget=normalize_Widget(self, tagname);
@@ -8250,7 +8375,7 @@ const Houxit=(function(global){
   function PropsParserContainment(setup, props){
     let value = setup.propValue.join("");
     let key = setup.openPropName.join("");
-    if(!len(setup.propValue)) value = null;
+    if(!len(setup.propValue)) value = isString(value) ? value : null;
     if(hasOwn(props, key)) props['__hx:keys__'].push([key, value ]);
     else props[key]=value;
     setup.openPropName=[];
@@ -8358,7 +8483,7 @@ const Houxit=(function(global){
   const isEmptyTag=(tag)=>emptyTagRegex.test(tag);
   const isOpenEmptyTag=(tag)=>/(\<[ ]*\>)/.test(tag);
   const isCloseEmptyTag=tag=>/(\<\/[ ]*\>)/.test(tag);
-  const openingTagsRegex = /(\<[ ]*\>|\<\/[ ]*\>)|(<(\/)?([\w\-\$!:\#\@.()[\]%?&]+)(\s+[^>]*?(?:(?:[\w]+[_!@#$'"%^&*()+\-\[\]{};:\\|,.<\/?~`]*)|(?:'[^']*')|(?:"[^"]*")))*\s*(\/)?>)|([\w \s!@#$'"%^&*()+\-\[\]{};:\\|,.\/?`~]+)/mg;
+  const openingTagsRegex = /(\<[ ]*\>|\<\/[ ]*\>)|(<(\/)?([\w\-\$!:\#\@.()[\]%?\/&]+)(\s+[^>]*?(?:(?:[\w]+[_!@#$'"%^&*()+\-\[\]{};:\\|,.<\/?~`]*)|(?:'[^']*')|(?:"[^"]*")))*\s*(\/)?>)|([\w \s!@#$'"%^&*()+\-\[\]{};:\\|,.\/?`~]+)/mg;
   const openingTagRegex=/<([\w\-\$!:\#\@.()[\]%?&]+)(\s+[^>]*?(?:(?:[\w]+[_!@#$'"%^&*()+\-\[\]{};:\\|,.<\/?`~]*)|(?:'[^']*')|(?:"[^"]*")))*\s*(\/)?>/m;
   const isOpeningTag = (source)=> openingTagRegex.test(source);
   const closingTagRegex= /<[\/]([\w$.:\-\@()[\]%&?]+)[ ]*>/;
@@ -8464,6 +8589,7 @@ const Houxit=(function(global){
     const [ attrsMatch, attrs, selfClosed ] = tagMatch.match(openingTagAttrRegex) ;
     vnode.props=__HTMLPropsParser__(attrs, null, self);
     if(config.JSXParser && vnode.props) normalize_jsx_props(vnode, config);
+    if(!isHouxitBuild(self) || config.jsx) vnode.is_hyperscript=true;
     if(!is_hyperscript && isHouxitBuild(self)) vnode.props=normalize_Props_State(vnode, self);
     if(hasOwn(vnode.props, 'key')){
       vnode.key=vnode.props.key;
@@ -8508,9 +8634,7 @@ const Houxit=(function(global){
   function parserSourceInitializer(source, self){
     return source.replace(generateBlockTagRegex(isHouxitBuild(self) ? self[$$$core].settings.delimiters : undefined), (match, timing, ClosingTag, name, value, selfClosed)=>{
       return `<${ClosingTag==="/" ? "/" : "" }::@_(${name})_ ${ ClosingTag==="@" ? "exp="+'"'+escapeDecoder(value)+'"' : "" } ${selfClosed ? "/" : ""}>`;
-    }).replace(commentRegex, (match, path, r)=>{
-      return /<!--/.test(match) ? "<!-->" : /-->/.test(match) ? "</-->" : match ;
-    });
+    }).replace(commentRegex, (match, path, r)=> /<!--/.test(match) ? "<!-->" : /-->/.test(match) ? "</-->" : match );
   }
   function __HouxitHTMLParser__(source, NodeList=[], config={}, self){
     if(!isString(source) && !source.trim()) return !isArray(NodeList) ? [] : NodeList;
@@ -8649,13 +8773,13 @@ const Houxit=(function(global){
     }else{
       let children=null;
       if(node.children){
-        children= isPlainTextChildrenTagElements(tagName) ? node.children : _HouxitTemplateParser(node.rawChildren, null, true);
+        children = isPlainTextChildrenTagElements(tagName) ? node.children : _HouxitTemplateParser(node.rawChildren, null, true, null, null, );
       }
       Vnode=defineVNode({
         type:tagName, 
         props:len(attributes) ? attributes : null,
         children
-      })
+      });
     }
     NodeList.add(Vnode)
   }
@@ -8663,12 +8787,10 @@ const Houxit=(function(global){
   function transcript_to_VNodeClass(){
     
   }
-  function templateElementNodeCompiler(self, vNode, hx_Element, config, NodeList, fall, ign=false ){
+  function templateElementNodeCompiler(self, vNode, hx_Element, config, NodeList, fall){
     let { type:tagName, props, children, rawChildren, key } = vNode;
     let attributes=props;
-    // fall=assign({}, fall);
     let context=smartDextCtxMerging(hx_Element?.LabContext || {}, fall);
-    // if(config) mountConstBlockTransform(self, context, config, hx_Element);
     vNode.hx_Element=hx_Element;
     vNode.ctx=context;
     const args=()=> [ hx_Element, NodeList, tagName, context, fall ];
@@ -8676,7 +8798,8 @@ const Houxit=(function(global){
       if(!isHouxitBuild(self)) {
         $debug_log(`block tags Cannot be used in build/static templates mode`, self, true);
       }else blockElementsPreProcessors(self, vNode, args(), config );
-    }else specializedTemplateProductionProcessor(self, attributes, vNode, args(), config);
+    }else specializedTemplateProductionProcessor(self, attributes, vNode,
+    args(), config);
   }
   function templateTextNodeCompiler(self, node, hx_Element, config,  NodeList, fall){
     if(node){
@@ -8689,21 +8812,19 @@ const Houxit=(function(global){
           LabContext=null
         }
       }
-      const value=node;
+      let value = node;
       node=self ? new HouxitTextElement(value, self, hx_Element, LabContext) : value;
       NodeList.add(node);
     }
   }
   function generateTemplateClasses(self, parser, hx_Element, config, NodeList, fall ){
-    fall=assign({}, fall)
+    fall=assign({}, fall);
     for (let [ index, node ] of parser.entries()){
       if(node){
-        if(isString(node) && node.trim()){
-          templateTextNodeCompiler(self, node, hx_Element, config,  NodeList, fall);
-        }else if(isHtmlComment(node)){/*Ignore comment nodes*/pass;
-        }else if(isVNodeClass(node)){
-          templateElementNodeCompiler(self, node, hx_Element, config, NodeList, fall )
-        }else if(isTemplateClass(node)){
+        if(isString(node) && node.trim()) templateTextNodeCompiler(self, node, hx_Element, config,  NodeList, fall);
+        else if(isHtmlComment(node))/*Ignore comment nodes*/pass;
+        else if(isVNodeClass(node)) templateElementNodeCompiler(self, node, hx_Element, config, NodeList, fall );
+        else if(isTemplateClass(node)){
           const childNodes=node[TemplateClassKey](self, null, hx_Element, fall, config);
           NodeList[isArray(childNodes) ? 'extend' : 'add' ](childNodes);
         }
@@ -8712,26 +8833,15 @@ const Houxit=(function(global){
   }
   function _HouxitTemplateParser(html, self, parent, hx_Element, fall, config={}){
     if(!html && !validateType(html, [String, Array, Object])) return null;
-    const initializedRender=self[$$$operands]?.initializedRender;
+    const isRerender=self[$$$operands]?.initializedRender;
     const templateRender= isString(html) ? __HouxitHTMLParser__(html, [], {
       trim:true,
       is_hyperscript:isHouxitBuild(self) && config.is_hyperscript
     }, self) : isObject(html) ? [ html ] : isArray(html) ? html : [] ;
     if(config.official && !self[$$$compiler].StarterTemplate) self[$$$compiler].StarterTemplate=templateRender;
-    const parser=memMove(templateRender, true);
     const NodeList=new Tuple();
-    generateTemplateClasses(self, parser, hx_Element, config, NodeList, fall );
+    generateTemplateClasses(self, templateRender, hx_Element, config, NodeList, fall);
     return len(NodeList) > 1 ? NodeList.list() : len(NodeList) === 1 ? NodeList.shift() : null ;
-  }
-  function mountConstBlockTransform(self, context, config, hx_Element){
-    // if(!isValidCtxType(config.contextScope) && !config.ctx && !len(config.ctx)) return;
-    if(config.ctx && hasOwn(config.ctx||{}, $$dexTransformKey)){
-      smartDextCtxMerging(context, config.ctx);
-    }else if(config.ctx && len(config.ctx) && !hasOwn(context, keys(config?.ctx||{})[0] )){
-      const key=keys(config.ctx)[0];
-      if(key) context[key]=config.ctx[key];
-    }
-    return context;
   }
   function controlBuiltInBlocks(self, node, blockN,  metrics, config){
     const [ hx_Element, NodeList, tagName, context, fall ] = metrics ;
@@ -8778,14 +8888,14 @@ const Houxit=(function(global){
       validator=validator[1];
       validator=_$runModelBind(self, validator, hx_Element);
       if(!isPFunction(validator)){
-        $debug_log(`template "@class" block validator prop expects a plain function callback reference`, self, true);
+        $debug_log(`@class: template "@class" block validator prop expects a plain function callback reference`, self, true);
         return;
       }
     }
     if(var_params){
       var_params=var_params.trim();
       if(!(var_params.startsWith("(") && var_params.endsWith(")"))){
-        $debug_log(`arguments of template class "${var_name}" does not meet required syntax\nmissing parenthesis in arguments enclosure  "(" and ")"`, self, true);
+        $debug_log(`${var_name}: arguments of template class "${var_name}" does not meet required syntax\nmissing parenthesis in arguments enclosure  "(" and ")"`, self, true);
         return;
       }
     }
@@ -9042,11 +9152,11 @@ const Houxit=(function(global){
   }
   function instance_Has_Block(self, name ){
     name = name.startsWith("@") ? name.slice(1) : name;
-    return _mapValue(self[$$$register]?.blocks || {}, name ) ;
+    return _makeMap_(self[$$$register]?.blocks || {}, name ) ;
   }
   const normalize_Block=(self, name)=>{
     name = name.startsWith("@") ? name.slice(1) : name;
-    return _mapValue(self[$$$register].blocks, name) ? self[$$$register].blocks[name]: null;
+    return _makeMap_(self[$$$register].blocks, name) ? self[$$$register].blocks[name]: null;
   }
   function blockElementsPreProcessors(self, vNode,  metrics, config){
     let children = vNode.children;
@@ -9108,6 +9218,12 @@ const Houxit=(function(global){
   function createTemplateClass(klass, name){
     return __createTemplateClass_Parser(...arguments);
   }
+  class TemplateClass extends BaseTemplateClass{
+    constructor(...args){
+      super();
+      this[TemplateClassKey]=createKlassBoilerPlate(this.class, ...args)
+    }
+  }
   function _getNodeListResponse(NodeList, parent=false){
     NodeList=isSet(NodeList) ? arrSet(NodeList) : isTuple(NodeList) ? NodeList.list() : NodeList;
     if(isTrue(parent) && len(NodeList)) {
@@ -9129,12 +9245,12 @@ const Houxit=(function(global){
       }
     });
   }
-  function htm( strings, ...values){
+  function html( strings, ...values){
     return __EncodeJSXParser__(strings, values);
   }
   function __EncodeJSXParser__(strings, values){
     if(!isFunction(strings.reduce)){
-      $debug_log(`htm macro can only be called with backticks embeded directly to method name\n\n"htm\`<templates>\`" instead of "htm()"\nCheck htm macro call`);
+      $debug_log(`html macro can only be called with backticks embeded directly to method name\n\n"html\`<templates>\`" instead of "html()"\nCheck html macro call`);
       return
     }
     if(len(values)) return normalizePreJSXFormat(strings, values);
@@ -9150,7 +9266,10 @@ const Houxit=(function(global){
       trim:true
     }, null);
   };
-  function markdown(mkd){
+  function MKDParser(mkd){
+    
+  }
+  function markdown(mkd, ...values){
     if(!isString(mkd)){
       $debug_log(`markdown helper expects strings values`);
       return null
@@ -9193,11 +9312,11 @@ const Houxit=(function(global){
     });
     if(!response) return
     const LifeCycleHooksList="onConnected,onDisconnected,onAdopted,onAttrChanged,plugin";
-    const isMNEOwnOptions=opt=>_mapValue(LifeCycleHooksList, opt);
+    const isMNEOwnOptions=opt=>_makeMap_(LifeCycleHooksList, opt);
     let Hooks={};
     const widget = defineWidget(opts)
     entries(widget).forEach(([ind, value])=>{
-      if(_mapValue(LifeCycleHooksList, ind)){
+      if(_makeMap_(LifeCycleHooksList, ind)){
         if(!isFunction(value)){
           $debug_log(`LifeCycle callback error\n\n"${ind}" is a callback function, received an invalid type`);
           return;
@@ -9366,7 +9485,7 @@ const Houxit=(function(global){
       return false;
     }
     for(let [ name, opt ] of entries(options)){
-      if(!_mapValue(optionsName, name)) {
+      if(!_makeMap_(optionsName, name)) {
         $debug_log(`${name} is not a valid defineVNode options value`);
         return false;
       }else if(name === 'props' && opt && !isPObject(opt)){
@@ -9467,7 +9586,7 @@ const Houxit=(function(global){
   global.HouxitCompilerSetup = HouxitCompilerSetup ;
   global.isReactiveToken = isReactiveToken ;
   global.trackEffectDeps = trackEffectDeps ;
-  global._mapValue = _mapValue ;
+  global._makeMap_ = _makeMap_ ;
   global.initBuild = initBuild ;
   global.useModifiers = useModifiers ;
   global._$runModelBind = _$runModelBind ;
@@ -9508,6 +9627,7 @@ const Houxit=(function(global){
   global.isReadonlyToken = isReadonlyToken ;
   global.preDestroy = preDestroy ;
   global.markdown = markdown ;
+  global.MKDParser = MKDParser ;
   global.validateType = validateType ;
   global.Any = Any ;
   global.Arguments = Arguments ;
@@ -9522,7 +9642,7 @@ const Houxit=(function(global){
   global.onCatch = onCatch ;
   global.onEffect = onEffect ;
   global.onTracked = onTracked ;
-  global.htm = htm ;
+  global.html = html ;
   global.Class = Class ;
   global.deferWatch = deferWatch ;
   global.readonlyToken = readonlyToken ;
@@ -9592,6 +9712,7 @@ const Houxit=(function(global){
   global.pushEffect = pushEffect ;
   global.HTMLPropsParser = HTMLPropsParser ;
   global.animate = animate ;
+  global.TemplateClass = TemplateClass ;
   global.createTemplateClass = createTemplateClass ;
   global.isReadonlyStream = isReadonlyStream ;
   global.isStateStream = isStateStream ;
